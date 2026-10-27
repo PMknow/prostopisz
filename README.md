@@ -1,6 +1,8 @@
 # prostopisz
 Asystent AI dla NGO automatyzujący analizę regulaminów grantowych i pre-audyt ryzyka (PoC). Narzędzie pomocnicze – nie stanowi porady prawnej. #TechForGood #LegalTech
 
+# Prostopisz
+
 Otwartoźródłowy asystent analityczny wspierający organizacje pozarządowe (NGO), grupy nieformalne oraz osoby przygotowujące wnioski grantowe.
 
 Projekt automatyzuje analizę regulaminów konkursowych, ekstrakcję wymagań formalnych oraz identyfikację ryzyk przy wykorzystaniu wieloagentowej architektury AI opartej na platformie Dify i modelach Google Gemini.
@@ -13,11 +15,11 @@ Głównym celem projektu jest ograniczenie ryzyka błędów formalnych podczas p
 - identyfikacji potencjalnych niespójności i niejednoznaczności w dokumentacji konkursowej,
 - raportów przygotowanych zgodnie z zasadami prostego języka.
 
-> **Zakres projektu:** Prostopisz został zaprojektowany i przetestowany wyłącznie dla dokumentów w języku polskim. Skuteczność działania dla dokumentów w innych językach nie była przedmiotem walidacji.
+> Projekt został zaprojektowany i przetestowany wyłącznie dla dokumentów w języku polskim. Skuteczność działania dla dokumentów w innych językach nie była przedmiotem walidacji.
 
 ---
 
-## ⚠️ Ważna informacja prawna
+## Ważna informacja prawna
 
 Prostopisz jest eksperymentalnym narzędziem analitycznym wykorzystującym generatywną sztuczną inteligencję.
 
@@ -41,7 +43,7 @@ W przypadku rozbieżności pomiędzy raportem wygenerowanym przez Prostopisz a d
 
 ---
 
-## ✨ Kluczowe funkcjonalności
+## Kluczowe funkcjonalności
 
 ### Analiza dokumentów konkursowych
 
@@ -83,9 +85,9 @@ Raport może wskazywać potencjalne:
 
 ---
 
-# 🏗️ Architektura „Placeholder & Audit”
+## Dwuetapowa architektura analizy i audytu
 
-Projekt wykorzystuje dwuetapową architekturę, która oddziela generowanie treści od audytu danych krytycznych.
+Projekt wykorzystuje dwa niezależne etapy przetwarzania dokumentu.
 
 ```text
 Dokument źródłowy
@@ -102,7 +104,6 @@ Dokument źródłowy
 └─────────┬──────────┘
           ▼
       Szkic
- (Placeholder Draft)
           ▼
 ┌────────────────────┐
 │ Audytor            │
@@ -120,14 +121,9 @@ Model przygotowuje:
 - szkic checklisty formalnej,
 - opis programu w prostym języku.
 
-Na tym etapie obowiązuje zakaz wpisywania kluczowych wartości takich jak:
+Na tym etapie nie wpisuje dat, kwot, limitów ani progów punktowych. W ich miejsce pozostawia znaczniki do późniejszej weryfikacji.
 
-- daty,
-- kwoty,
-- limity,
-- progi punktowe.
-
-W ich miejsce pojawiają się znaczniki:
+Przykład:
 
 ```text
 [DO UZUPEŁNIENIA PRZEZ AUDYTORA]
@@ -135,7 +131,7 @@ W ich miejsce pojawiają się znaczniki:
 
 ### Etap 2. Audytor
 
-Model konfrontuje szkic z dokumentem źródłowym i:
+Model porównuje szkic z dokumentem źródłowym i:
 
 - uzupełnia daty, kwoty i limity,
 - wyszukuje pominięte wymagania,
@@ -143,13 +139,15 @@ Model konfrontuje szkic z dokumentem źródłowym i:
 - dodaje odwołania do odpowiednich sekcji dokumentu,
 - identyfikuje potencjalne niespójności i niejednoznaczności.
 
-### Guardrails
+Takie rozdzielenie syntezy treści od weryfikacji danych ogranicza ryzyko błędów w raportach generowanych przez AI.
 
-Raport końcowy zawiera wbudowane ostrzeżenia przypominające o pomocniczym charakterze analizy AI.
+### Mechanizmy bezpieczeństwa
+
+Raport końcowy zawiera przypomnienie o pomocniczym charakterze analizy oraz konieczności weryfikacji dokumentacji źródłowej.
 
 ---
 
-## 📂 Struktura repozytorium
+## Struktura repozytorium
 
 ```text
 prostopisz/
@@ -158,20 +156,20 @@ prostopisz/
 └── README.md
 ```
 
-Przykładowe zanonimizowane analizy mogą zostać opublikowane w przyszłych wersjach projektu.
+Przykładowe zanonimizowane analizy mogą zostać opublikowane w kolejnych wersjach projektu.
 
 ---
 
-## 🛠️ Uruchomienie workflow w Dify
+## Uruchomienie workflow w Dify
 
 ### Wymagania
 
-- Dify 0.7.0 lub nowszy;
-- skonfigurowana wtyczka Google Gemini (`langgenius/gemini`);
-- własny klucz API Google AI Studio lub Google Cloud Vertex AI;
+- Dify 0.7.0 lub nowszy,
+- skonfigurowana wtyczka Google Gemini (`langgenius/gemini`),
+- własny klucz API Google AI Studio lub Google Cloud Vertex AI,
 - aktywne konto rozliczeniowe zgodne z zasadami dostawcy modeli.
 
-> **Uwaga:** Workflow nie zawiera własnych zasobów obliczeniowych ani dostępu do modeli AI. Użytkownik musi samodzielnie skonfigurować i rozliczać wykorzystanie usług Google Gemini.
+> Workflow nie zawiera własnych zasobów obliczeniowych ani dostępu do modeli AI. Użytkownik musi samodzielnie skonfigurować i rozliczać wykorzystanie usług Google Gemini.
 
 ### Instalacja
 
@@ -183,7 +181,7 @@ Przykładowe zanonimizowane analizy mogą zostać opublikowane w przyszłych wer
 prostopisz-v0.2-workflow.yml
 ```
 
-3. W ustawieniach **Model Providers** skonfiguruj:
+3. W ustawieniach dostawców modeli skonfiguruj wtyczkę:
 
 ```text
 langgenius/gemini
@@ -194,13 +192,13 @@ langgenius/gemini
 5. Po zakończeniu analizy system wygeneruje raport zawierający:
 
    - podsumowanie dokumentu,
-   - kluczowe terminy i limity,
+   - zestawienie kluczowych terminów i limitów,
    - checklistę formalną,
    - uwagi audytorskie.
 
 ---
 
-## ⚠️ Znane ograniczenia
+## Znane ograniczenia
 
 Wersja v0.2 została przetestowana głównie na dokumentach zawierających poprawnie rozpoznawalną warstwę tekstową.
 
@@ -219,30 +217,30 @@ W takich przypadkach system może nie rozpoznać wszystkich informacji lub niepr
 
 ---
 
-## 📌 Status projektu
+## Status projektu
 
-Prostopisz znajduje się obecnie na etapie **Proof of Concept (v0.2)**.
+Prostopisz znajduje się obecnie na etapie Proof of Concept (v0.2).
 
-Projekt powstał w celu sprawdzenia skuteczności dwuetapowej architektury „Placeholder & Audit” w analizie regulaminów grantowych oraz tworzeniu checklist formalnych.
+Projekt powstał w celu sprawdzenia skuteczności dwuetapowej architektury analizy i audytu w analizie regulaminów grantowych oraz tworzeniu checklist formalnych.
 
 Dalszy rozwój projektu będzie zależał od wyników testów, dostępności czasu oraz zainteresowania społeczności.
 
 ---
 
-## 🔭 Możliwe kierunki rozwoju
+## Możliwe kierunki rozwoju
 
 Poniższa lista przedstawia rozważane kierunki rozwoju projektu. Nie stanowi deklaracji realizacji ani harmonogramu prac.
 
 | Wersja | Kamień milowy | Funkcjonalności i architektura | Walidacja |
 |---------|---------|---------|---------|
-| **v0.2** (obecna) | **Core Audit Engine (PoC)** | Dwuetapowy łańcuch analityczny w Dify, podział ścieżek podmiotowych, ekstrakcja limitów 1:1, identyfikacja potencjalnych niespójności i niejednoznaczności. | Weryfikacja ekspercka (Red Teaming) poprzez konfrontację raportów z dokumentami źródłowymi. |
-| **v0.3** | **UX & Export Pack** | Automatyczny eksport raportów do formatu DOCX, rozwój interfejsu oraz publikacja zanonimizowanych przykładów analiz. | Wywiady pogłębione (IDI) i testy zadaniowe z przedstawicielami NGO. |
-| **v0.4** | **Interaktywny Doradca Grantowy** | Rozszerzenie projektu o tryb konwersacyjny (Chatflow) z pamięcią sesji i możliwością zadawania pytań dotyczących analizowanego regulaminu. | Testy użyteczności oraz analiza potrzeb użytkowników. |
-| **v0.5** | **Weryfikacja Wniosków i OCR** | Automatyczna analiza gotowych wniosków grantowych oraz integracja rozwiązań OCR dla dokumentów skanowanych. | Testy na zanonimizowanych danych historycznych i benchmarking skuteczności. |
+| **v0.2** (obecna) | Silnik audytu (PoC) | Dwuetapowy łańcuch analityczny w Dify, podział ścieżek podmiotowych, ekstrakcja limitów 1:1, identyfikacja potencjalnych niespójności i niejednoznaczności. | Weryfikacja ekspercka poprzez konfrontację raportów z dokumentami źródłowymi. |
+| **v0.3** | Interfejs i eksport raportów | Automatyczny eksport raportów do formatu DOCX, rozwój interfejsu oraz publikacja zanonimizowanych przykładów analiz. | Wywiady pogłębione i testy zadaniowe z przedstawicielami NGO. |
+| **v0.4** | Interaktywny doradca grantowy | Rozszerzenie projektu o tryb konwersacyjny z pamięcią sesji i możliwością zadawania pytań dotyczących analizowanego regulaminu. | Testy użyteczności oraz analiza potrzeb użytkowników. |
+| **v0.5** | Weryfikacja wniosków i OCR | Automatyczna analiza gotowych wniosków grantowych oraz integracja rozwiązań OCR dla dokumentów skanowanych. | Testy na zanonimizowanych danych historycznych i benchmarking skuteczności. |
 
 ---
 
-## 🤝 Współpraca
+## Współpraca
 
 Sugestie, zgłoszenia błędów i propozycje usprawnień są mile widziane.
 
@@ -254,7 +252,7 @@ Możesz skorzystać z:
 
 ---
 
-## 📄 Licencja
+## Licencja
 
 Projekt jest udostępniany na licencji MIT.
 
@@ -264,6 +262,6 @@ Copyright (c) 2026 Katarzyna Nowakowska
 
 ---
 
-## 🌱 Misja projektu
+## Misja projektu
 
 Ułatwianie dostępu do finansowania organizacjom społecznym poprzez automatyzację analizy regulaminów grantowych oraz ograniczanie ryzyka błędów formalnych przy wykorzystaniu odpowiedzialnie zaprojektowanej sztucznej inteligencji.
