@@ -1,8 +1,6 @@
 # prostopisz
 Asystent AI dla NGO automatyzujący analizę regulaminów grantowych i pre-audyt ryzyka (PoC). Narzędzie pomocnicze – nie stanowi porady prawnej. #TechForGood #LegalTech
 
-# Prostopisz
-
 Otwartoźródłowy asystent analityczny wspierający organizacje pozarządowe (NGO), grupy nieformalne oraz osoby przygotowujące wnioski grantowe.
 
 Projekt automatyzuje analizę regulaminów konkursowych, ekstrakcję wymagań formalnych oraz identyfikację ryzyk przy wykorzystaniu wieloagentowej architektury AI opartej na platformie Dify i modelach Google Gemini.
