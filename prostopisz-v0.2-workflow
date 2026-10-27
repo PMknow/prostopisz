@@ -1,0 +1,459 @@
+app:
+  description: 'Wieloagentowy asystent analityczny wspierający organizacje pozarządowe
+    (NGO) i wnioskodawców w natychmiastowej ekstrakcji danych, zarządzaniu ryzykiem
+    formalnym oraz analizie regulaminów grantowych. Wersja testowa - może popełniać
+    błędy. '
+  icon: 🤖
+  icon_background: '#FEF7C3'
+  icon_type: emoji
+  mode: workflow
+  name: Prostopisz v0.2 - checklista grantowa
+  use_icon_as_answer_icon: false
+dependencies:
+- current_identifier: null
+  type: marketplace
+  value:
+    marketplace_plugin_unique_identifier: langgenius/gemini:0.9.12@9bb9eff3f9c99a8f1f87bdd5e0f178d5493918939dd0e02825ae8383bd0fd7ed
+    version: null
+kind: app
+version: 0.7.0
+workflow:
+  conversation_variables: []
+  environment_variables: []
+  features:
+    file_upload:
+      allowed_file_extensions:
+      - .JPG
+      - .JPEG
+      - .PNG
+      - .GIF
+      - .WEBP
+      - .SVG
+      allowed_file_types:
+      - image
+      allowed_file_upload_methods:
+      - local_file
+      - remote_url
+      enabled: false
+      fileUploadConfig:
+        attachment_image_file_size_limit: 2
+        audio_file_size_limit: 50
+        batch_count_limit: 5
+        file_size_limit: 15
+        file_upload_limit: 50
+        image_file_batch_limit: 10
+        image_file_size_limit: 10
+        knowledge_file_size_limit: 15
+        single_chunk_attachment_limit: 10
+        skill_file_size_limit: 50
+        video_file_size_limit: 100
+        workflow_file_upload_limit: 10
+      image:
+        enabled: false
+        number_limits: 3
+        transfer_methods:
+        - local_file
+        - remote_url
+      number_limits: 3
+    opening_statement: ''
+    retriever_resource:
+      enabled: true
+    sensitive_word_avoidance:
+      enabled: false
+    speech_to_text:
+      enabled: false
+    suggested_questions: []
+    suggested_questions_after_answer:
+      enabled: false
+    text_to_speech:
+      enabled: false
+      language: ''
+      voice: ''
+  graph:
+    edges:
+    - data:
+        isInIteration: false
+        isInLoop: false
+        sourceType: start
+        targetType: document-extractor
+      id: 1792585379030-source-1792585728564-target
+      selected: false
+      source: '1792585379030'
+      sourceHandle: source
+      target: '1792585728564'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        isInLoop: false
+        sourceType: llm
+        targetType: llm
+      id: 1792600272136-source-1792600642165-target
+      source: '1792600272136'
+      sourceHandle: source
+      target: '1792600642165'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        isInLoop: false
+        sourceType: document-extractor
+        targetType: llm
+      id: 1792585728564-source-1792600272136-target
+      source: '1792585728564'
+      sourceHandle: source
+      target: '1792600272136'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        isInLoop: false
+        sourceType: llm
+        targetType: end
+      id: 1792600642165-source-1792601467325-target
+      source: '1792600642165'
+      sourceHandle: source
+      target: '1792601467325'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    nodes:
+    - data:
+        selected: false
+        title: Start
+        type: start
+        variables:
+        - allowed_file_extensions:
+          - docx
+          - pdf
+          - txt
+          allowed_file_types:
+          - document
+          allowed_file_upload_methods:
+          - local_file
+          - remote_url
+          default: ''
+          hide: false
+          hint: ''
+          label: dokument
+          options: []
+          placeholder: ''
+          required: true
+          type: file
+          variable: dokument
+      height: 107
+      id: '1792585379030'
+      position:
+        x: -57.689501364788896
+        y: 274.4871050426932
+      positionAbsolute:
+        x: -57.689501364788896
+        y: 274.4871050426932
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 242
+      zIndex: 0
+    - data:
+        is_array_file: false
+        selected: false
+        title: Ekstraktor dokumentów
+        type: document-extractor
+        variable_selector:
+        - '1792585379030'
+        - dokument
+      height: 103
+      id: '1792585728564'
+      position:
+        x: 249.131840624039
+        y: 282.79597125538896
+      positionAbsolute:
+        x: 249.131840624039
+        y: 282.79597125538896
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 241
+      zIndex: 0
+    - data:
+        context:
+          enabled: false
+          variable_selector: []
+        model:
+          completion_params:
+            max_output_tokens: 16384
+            thinking_level: Low
+          mode: chat
+          name: gemini-3.8-flash
+          provider: langgenius/gemini/google
+        prompt_template:
+        - id: 230e3ac3-4fcb-46cd-9b96-97c85d11d7f1
+          role: system
+          text: "<rola_i_cel>\nJesteś Analitykiem Programów Grantowych i Prawnych\
+            \ wspierającym organizacje pozarządowe (NGO) oraz mikroprzedsiębiorców.\
+            \ Twoim zadaniem jest dokładne przeskanowanie dokumentu źródłowego i przygotowanie\
+            \ w prostym języku szkicu wprowadzenia (Executive Summary) oraz kompletnego\
+            \ szkieletu checklisty formalnej.\n</rola_i_cel>\n\n<zelazne_zasady>\n\
+            1. ZAKAZ WPISYWANIA DAT I KWOT NA TYM ETAPIE: W swojej odpowiedzi celowo\
+            \ NIE wpisuj konkretnych kwot pieniężnych, limitów procentowych, progów\
+            \ punktowych ani dat kalendarzowych. Zamiast nich wstawiaj znacznik dla\
+            \ Audytora: `[DO UZUPEŁNIENIA PRZEZ AUDYTORA: podaj dokładną wartość z\
+            \ ...]`.\n2. 100% KOMPLETNOŚCI WYMOGÓW I PUŁAPEK: Wyciągnij wszystkie\
+            \ kryteria dostępu, wykluczenia podmiotowe i przedmiotowe, ukryte limity\
+            \ (np. limity miejsc w naborze, zakaz łączenia ról w zarządach, wymogi\
+            \ badania rynku, koszty zakazane) oraz kroki proceduralne.\n3. PROSTY\
+            \ JĘZYK: Pisz w stronie czynnej (Kto? Co robi?), krótkimi zdaniami, bez\
+            \ żargonu urzędowego i bez rzeczowników odczasownikowych (zamiast „dokonanie\
+            \ rejestracji” pisz „zarejestruj”).\n4. ZERO HALUCYNACJI: Opieraj się\
+            \ wyłącznie na dostarczonym tekście.\n</zelazne_zasady>\n\n<format_wyjsciowy>\n\
+            Zwróć wyłącznie czystą strukturę roboczą w formacie Markdown (bez powitań\
+            \ i komentarzy):\n\n### Szkic Executive Summary\n- **Co to za program\
+            \ / dokument:** [Opis prostym językiem + orientacyjny paragraf/część]\n\
+            - **Dla kogo jest przeznaczony:** [Pełna lista uprawnionych i warunków\
+            \ dostępu ze znacznikami dla Audytora + paragraf/część]\n- **Kto jest\
+            \ wykluczony:** [Pełna lista wykluczeń i zakazów łączenia ról + paragraf/część]\n\
+            - **Na co można przeznaczyć środki:** [Dozwolone sfery i wymóg bezpłatności\
+            \ + paragraf]\n  - **Koszty zakazane (w podziale na kategorie):** [Krótkie\
+            \ grupy wydatków niedozwolonych bez wpisywania kwot]\n\n### Szkielet Checklisty\
+            \ Formalnej\n1. **[Nazwa wymogu / kroku]:** [Opis wymogu w prostym języku\
+            \ + znacznik `[DO UZUPEŁNIENIA PRZEZ AUDYTORA: ...]` + numer sekcji/paragrafu\
+            \ z oryginału]\n</format_wyjsciowy>"
+        - id: 37d849cf-5c00-4a21-ae6b-31d6fb1254a1
+          role: user
+          text: '<dokument_zrodlowy>
+
+            {{#1792585728564.text#}}
+
+            </dokument_zrodlowy>
+
+            <zadanie>
+
+            Na podstawie powyższego <dokument_zrodlowy> przygotuj Szkic Executive
+            Summary (co to za program i dla kogo jest przeznaczony) oraz Szkielet
+            Checklisty Formalnej. Pamiętaj o bezwzględnym zakazie wpisywania ryzykownych
+            kwot i dat – wstaw w tych miejscach znaczniki `[DO UZUPEŁNIENIA PRZEZ
+            AUDYTORA]` wraz ze wskazaniem paragrafu.
+
+            </zadanie>'
+        selected: false
+        title: Redaktor 2
+        type: llm
+        vision:
+          enabled: false
+      height: 86
+      id: '1792600272136'
+      position:
+        x: 526.7211422016873
+        y: 295.4871050426932
+      positionAbsolute:
+        x: 526.7211422016873
+        y: 295.4871050426932
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 241
+      zIndex: 0
+    - data:
+        context:
+          enabled: false
+          variable_selector: []
+        model:
+          completion_params:
+            max_output_tokens: 45000
+            thinking_level: High
+          mode: chat
+          name: gemini-4-argon
+          provider: langgenius/gemini/google
+        prompt_template:
+        - id: 3a8634c9-9a88-4eba-a778-fcfabd3d0b68
+          role: system
+          text: "<rola_i_cel>\nJesteś Głównym Audytorem Prawno-Finansowym oraz Redaktorem\
+            \ Prostego Języka w systemie Prostopisz. Wykorzystujesz tryb zaawansowanego\
+            \ rozumowania (Thinking), aby zapewnić 100% zgodności faktów, dat, kwot\
+            \ i warunków prawnych z oryginałem przy zachowaniu pełnej przystępności\
+            \ językowej.\nOtrzymujesz dwa źródła danych:\n1. <dokument_zrodlowy> –\
+            \ surowy tekst oryginału (jedyne źródło prawdy).\n2. <synteza_redaktora_2>\
+            \ – roboczy szkic Executive Summary oraz szkielet checklisty ze znacznikami\
+            \ `[DO UZUPEŁNIENIA PRZEZ AUDYTORA]`.\n\nTwoim zadaniem jest wygenerowanie\
+            \ WYŁĄCZNIE czterech sekcji raportu zarządczego. BEZWZGLĘDNY ZAKAZ przepisywania\
+            \ pełnego dokumentu źródłowego na końcu raportu.\n</rola_i_cel>\n\n<zelazne_blokady_wiernosci>\n\
+            1. 100% ZGODNOŚCI FAKTÓW, DAT I KWOT:\n   - Zastąp wszystkie znaczniki\
+            \ `[DO UZUPEŁNIENIA PRZEZ AUDYTORA]` dokładnymi kwotami (z groszami, jeśli\
+            \ są w oryginale), datami, godzinami, liczbą dni (roboczych/kalendarzowych),\
+            \ limitami wniosków oraz progami punktowymi wyciągniętymi 1:1 z <dokument_zrodlowy>.\n\
+            \   - Zakaz zaokrąglania liczb i zakaz zgadywania brakujących numerów\
+            \ przepisów (jeśli w oryginale jest błąd pisarski, np. urwany numer ustępu,\
+            \ przytocz go wiernie lub wskaż w sekcji 4).\n   - Nie dopowiadaj terminów\
+            \ finansowych niewystępujących w oryginale (np. jeśli dokument nie używa\
+            \ słów „wkład własny”, zapisz wyłącznie dokładny warunek z oryginału).\n\
+            2. KOMPLETNOŚĆ I WYJĄTKI (AUDYT SZKICU REDAKTORA 2):\n   - Przeskanuj\
+            \ <dokument_zrodlowy> i sprawdź, czy <synteza_redaktora_2> nie pominęła\
+            \ żadnego warunku formalnego, ukrytego limitu (np. limitu przyjmowanych\
+            \ wniosków w naborze), wyjątku (np. możliwości obniżenia dotacji poniżej\
+            \ kwoty minimalnej podczas oceny lub negocjacji) ani wykluczenia. Jeśli\
+            \ w szkicu czegoś brakuje – bezwzględnie dopisz to do raportu.\n   - Nie\
+            \ spłaszczaj różnic między podmiotami (np. jeśli wymóg pełnoletności lub\
+            \ limit kwotowy różni się dla grup nieformalnych, samopomocowych i młodych\
+            \ NGO – rozdziel je precyzyjnie).\n3. ZAKAZ ZMIANY TRYBU OBOWIĄZKU I SPÓJNIKÓW:\n\
+            \   - Rygorystycznie odróżniaj twardy obowiązek („musi / należy / jest\
+            \ zobowiązany”) od możliwości („może / dopuszcza się”).\n   - Rygorystycznie\
+            \ zachowuj różnicę między spójnikami „i / oraz” (warunki łączne) a „lub\
+            \ / albo” (warunki rozłączne).\n4. PRECYZYJNE LINKOWANIE:\n   - Przy każdym\
+            \ założeniu w sekcji 1, każdej wartości w tabeli w sekcji 2 oraz każdym\
+            \ kroku w sekcji 3 dopisz dokładny odnośnik do przepisu z oryginału (np.\
+            \ `-> **[Sprawdź w tekście: POSTANOWIENIA OGÓLNE ust. 2]**`, `-> **[Sprawdź\
+            \ w tekście: Część IV pkt 3.3]**` lub `-> **[Sprawdź w tekście: § 2 ust.\
+            \ 3]**`).\n5. WARUNKOWOŚĆ I ROZGAŁĘZIENIA (BRANCHING): Nie łącz w jeden\
+            \ krok wymogów dla wzajemnie wykluczających się typów podmiotów (np. NGO\
+            \ vs. grupy nieformalne). Jeśli dany wymóg, limit lub krok dotyczy tylko\
+            \ konkretnej grupy, zacznij punkt od wyraźnego taga, np. **[Tylko dla\
+            \ Młodych NGO]** lub **[Tylko dla grup]**. Checklista musi jasno oddzielać\
+            \ niezależne ścieżki.\n</zelazne_blokady_wiernosci>\n\n\n<zasady_prostego_jezyka>\n\
+            1. Długość i struktura zdań: Pisz zdaniami o średniej długości 12–15 słów.\
+            \ Zakaz tworzenia wielokrotnie złożonych zdań-tasiemców. Jeśli w oryginale\
+            \ występuje długa lista wykluczeń lub kosztów zakazanych, BEZWZGLĘDNIE\
+            \ rozbij ją na krótkie, tematyczne podpunkty z wcięciem (np. inwestycje\
+            \ i majątek, podatki i kary, działalność gospodarcza i doraźna).\n2. Strona\
+            \ czynna i czasowniki: Pisz zawsze w stronie czynnej (Kto? -> Co robi?).\
+            \ Zastępuj rzeczowniki odczasownikowe czasownikami (zamiast „dokonanie\
+            \ weryfikacji” -> „sprawdzenie / Operatorzy sprawdzą”).\n3. Zero imiesłowów\
+            \ i żargonu: Całkowity zakaz używania form zakończonych na `-ąc`, `-ący`,\
+            \ `-wszy`, `-łszy`. Trudne pojęcia (np. „alokacja”, „koszty kwalifikowalne”,\
+            \ „podwójne finansowanie”) od razu wyjaśniaj w nawiasie prostymi słowami.\n\
+            4. Bezpośredni zwrot: W checkliście (sekcja 3) zwracaj się bezpośrednio\
+            \ do wnioskodawcy (w drugiej osobie liczby pojedynczej „Ty” - np. sprawdź,\
+            \ złóż, upewnij się), a działania instytucji opisuj w 3. osobie („Operatorzy”,\
+            \ „Eksperci”).\n</zasady_prostego_jezyka>\n\n<format_wyjsciowy>\nZwróć\
+            \ wyłącznie czysty kod Markdown według poniższego szablonu (bez komentarzy\
+            \ wstępnych):\n\n# Raport Prostopisz: Podsumowanie i Checklista\n> **Uwaga:**\
+            \ Raport został wygenerowany automatycznie przez asystenta AI w celu ułatwienia\
+            \ lektury regulaminu. Ma charakter wyłącznie informacyjny i pomocniczy\
+            \ – przed złożeniem wniosku zawsze zweryfikuj ostateczne wymogi w oficjalnej\
+            \ dokumentacji organizatora.\n## 1. O dokumencie (Executive Summary)\n\
+            - **Co to za program / dokument:** [Zweryfikowany opis w prostym języku\
+            \ + odnośnik do oryginału]\n- **Dla kogo jest przeznaczony:** [Zweryfikowane\
+            \ kryteria dla każdego typu podmiotu + odnośniki]\n- **Kto jest wykluczony:**\
+            \ [Wszystkie wykluczenia podmiotowe, konflikt ról w zarządach, limity\
+            \ wniosków na osobę/podmiot + odnośniki]\n- **Na co można przeznaczyć\
+            \ środki / Przedmiot regulacji:** [Dozwolone sfery, wymóg bezpłatności\
+            \ dla uczestników + odnośniki]\n  - **Główne koszty zakazane:** (rozbij\
+            \ na krótkie grupy zamiast jednego długiego zdania):\n    - *Majątek i\
+            \ infrastruktura:* [remonty, nieruchomości, adaptacje, sprzęt]\n    -\
+            \ *Opłaty, kary i podatki:* [odliczalny VAT, odsetki, mandaty, spory sądowe]\n\
+            \    - *Inne wykluczenia:* [podwójne finansowanie, alkohol, działalność\
+            \ gospodarcza/religijna/polityczna]\n\n## 2. Kluczowe terminy i kwoty\
+            \ (Weryfikacja 1:1 z oryginałem)\n| Parametr / Kategoria | Zweryfikowana\
+            \ wartość z oryginału i odnośnik |\n| :--- | :--- |\n| **Terminy składania\
+            \ / realizacji** | [Wszystkie daty trwania programu, naboru, realizacji\
+            \ projektów, min./maks. czas trwania, termin na odwołanie] **[Odnośniki]**\
+            \ |\n| **Budżet programu / alokacja** | [Łączna pula, minimalna liczba\
+            \ grantów w programie i naborze w podziale na ścieżki, limit przyjmowanych\
+            \ wniosków w naborze] **[Odnośniki]** |\n| **Minimalna i maksymalna kwota\
+            \ dotacji** | [Kwota min. i maks. + dokładny warunek, kiedy dotacja może\
+            \ spaść poniżej minimum] **[Odnośniki]** |\n| **Wymagany wkład własny\
+            \ i limity** | [Informacja o wkładzie własnym, limit przychodu NGO, limity\
+            \ na środki trwałe i administrację dla poszczególnych podmiotów, progi\
+            \ punktowe] **[Odnośniki]** |\n\n## 3. Checklista formalna krok po kroku\n\
+            - **☐ Krok 1 – [Nazwa wymogu]:** [Krótki, konkretny opis w prostym języku\
+            \ uzupełniony o twarde kwoty/terminy/wyjątki] -> **[Sprawdź w tekście:\
+            \ Część/§ X ust. Y]**\n- **☐ Krok 2 – [Nazwa wymogu]:** [Krótki, konkretny\
+            \ opis w prostym języku uzupełniony o twarde kwoty/terminy/wyjątki] ->\
+            \ **[Sprawdź w tekście: Część/§ X ust. Y]**\n\n## 4. Status Audytu (Guardrail)\n\
+            - ✅ **Weryfikacja danych (Audit Check):** Potwierdź zgodność lub wypisz\
+            \ miejsca, w których tekst z ekstraktora był nieczytelny/ucięty.\n- \U0001F50D\
+            \ **Uwagi audytorskie do oryginału:** [Wypisz krótko ewentualne omyłki\
+            \ pisarskie lub wewnętrzne niespójności znalezione w samym dokumencie\
+            \ źródłowym, np. urwane numery artykułów, sprzeczności w dopuszczalnych\
+            \ dokumentach księgowych/paragonach lub sprzeczne wzmianki o formie papierowej/elektronicznej.\
+            \ Jeśli dokument nie ma żadnych usterek, wpisz: „Brak wewnętrznych sprzeczności\
+            \ w tekście źródłowym.”]\n---\n*Raport wygenerowany automatycznie przez\
+            \ AI. Dokument nie stanowi oficjalnej wykładni prawa ani wiążącej interpretacji\
+            \ regulaminu. W przypadku rozbieżności decydujące znaczenie ma dokument\
+            \ źródłowy oraz komunikaty Operatorów.*\n</format_wyjsciowy>"
+        - id: acb8ff37-1a07-4fab-bbef-ca10de3b41a1
+          role: user
+          text: '<dokument_zrodlowy>
+
+            {{#1792585728564.text#}}
+
+            </dokument_zrodlowy>
+
+
+            <synteza_redaktora_2>
+
+            {{#1792600272136.text#}}
+
+            </synteza_redaktora_2>
+
+
+            <zadanie>
+
+            1. Zweryfikuj <synteza_redaktora_2> z <dokument_zrodlowy>: uzupełnij wszystkie
+            znaczniki `[DO UZUPEŁNIENIA PRZEZ AUDYTORA]` dokładnymi kwotami, datami
+            i limitami 1:1 z oryginału oraz dopisz wszelkie pominięte przez Redaktora
+            2 warunki formalne, wyjątki i ukryte pułapki.
+
+            2. Zbuduj 2-kolumnową tabelę kluczowych terminów i kwot oraz dopnij precyzyjne
+            odnośniki do paragrafów/części oryginału.
+
+            3. Zredaguj całość zgodnie z zasadami prostego języka (krótkie zdania
+            w stronie czynnej, zero imiesłowów, 100% wierności prawnej).
+
+            4. Wygeneruj WYŁĄCZNIE cztery sekcje raportu zarządczego.
+
+            </zadanie>'
+        selected: true
+        structured_output_enabled: false
+        title: 'Audytor '
+        type: llm
+        vision:
+          enabled: false
+      height: 86
+      id: '1792600642165'
+      position:
+        x: 808.943830205289
+        y: 295.4871050426932
+      positionAbsolute:
+        x: 808.943830205289
+        y: 295.4871050426932
+      selected: true
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 241
+      zIndex: 0
+    - data:
+        outputs:
+        - value_selector:
+          - '1792600642165'
+          - text
+          value_type: string
+          variable: raport
+        selected: false
+        title: Wyjście 2
+        type: end
+      height: 87
+      id: '1792601467325'
+      position:
+        x: 1091.1927973430768
+        y: 295.4871050426932
+      positionAbsolute:
+        x: 1091.1927973430768
+        y: 295.4871050426932
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 241
+      zIndex: 0
+    viewport:
+      x: -514.4555004986914
+      y: 159.61996109192728
+      zoom: 1.310086641241851
+  rag_pipeline_variables: []
